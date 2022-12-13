@@ -21,7 +21,7 @@ let promises = [];//Skapa en array som används i båda fallen
 
 // ================================== HÄR SKA MAN JOBBA!! ========================================
 //withPromiseAll(span); //Ta bort "//" för att aktivera funktionen. 1445ms
-secondTry(span); //Ta bort "//" för att aktivera funktionen. 923ms
+//secondTry(span); //Ta bort "//" för att aktivera funktionen. 923ms
 // ===============================================================================================
 
 async function withPromiseAll(span) {
