@@ -14,52 +14,74 @@ Om du skickar in 30 som parameter, hur lång tid tog funktionen att utföras? (a
 Om du nu skickar in 30 som parameter, hur lång tid tog funktionen att utföras? Jämför med tidigare antecknad tid.
 */
 
+// ==============================================================================================================================
 
+let span = 30; //Antal år bakåt i tiden. 
+let promises = [];//Skapa en array som används i båda fallen
 
-let span = 30;
+// ================================== HÄR SKA MAN JOBBA!! ========================================
+//withPromiseAll(span); //Ta bort "//" för att aktivera funktionen. 1445ms
+secondTry(span); //Ta bort "//" för att aktivera funktionen. 923ms
+// ===============================================================================================
 
-
-console.time("apiCall");
-
-for(let i=0 ; i < span ; i++){
+async function withPromiseAll(span) {
     
-    collectData(2022-i)
-}
-
-async function collectData(i){
+    for(let i=2022; i > 2022-span; i--){
+        promises.push (fetch(`https://sholiday.faboul.se/dagar/v2.1/${i}`));
+        
+    }
+        //En fetch returnerar promises
+    console.log(promises)
     
-    await Promise.all(
-        fetch(`http://sholiday.faboul.se/dagar/v2.1/${i}`)
-        .then(response => response.json())
-        .then(data => console.log(data.startdatum))
-    )
-           
+    console.time("apiCall");
+    let responses = await Promise.all(promises);
+    console.timeEnd("apiCall");
+
+        //Efter Promise.all blir dessa promises till responses
+    console.log(responses);
+
+    let pending = [];
+        for(let i=0; i < responses.length; i++){
+            pending[i] = await responses[i].json(); //await här
+            console.log(pending[i])
+        }
+        //Efter json()-parse så returneras Promise {<pending>} (Om jag inte använder await)
+        //Med await, däremot blir det riktigt och rätt. 
+        let finishedList = await Promise.all(pending)
+        console.log(finishedList);
+  }
+  
+// ================== BREAK POINT =============================
+
+async function secondTry(span){    
+
+    for(let i=2022; i > 2022-span; i--){
+        promises.push (fetch(`https://sholiday.faboul.se/dagar/v2.1/${i}`))
+    }
+    console.log(promises)
+
+    let responses = [];
+    console.time("apiCall");
+        for(let i=0 ; i < promises.length ; i++){
+            responses[i] = await Promise.resolve(promises[i]);
+            console.log(responses[i])
+        }
+    console.timeEnd("apiCall");
+
+    console.log(responses);
+
+    let pending = [];
+        for(let i=0; i < responses.length; i++){
+            pending[i] = await responses[i].json(); //await här
+            console.log(pending[i])
+        }
+
+        let finishedList = await Promise.all(pending)
+        console.log(finishedList);
 };
-console.timeEnd("apiCall")
-//Ovan tog 8.49 ms
 
-// ===== BRYTPUNKT =====
 
-//Nedan tog 6.35 ms
-/*
-console.time("apiCallWithoutPrimiseAll");
 
-for(let i=0 ; i < span ; i++){
-    
-    collectData(2022-i)
-}
-
-function collectData(i){
-    
-    
-    fetch(`http://sholiday.faboul.se/dagar/v2.1/${i}`)
-    .then(response => response.json())
-    .then(data => console.log(data.startdatum))
-    
-           
-};
-console.timeEnd("apiCallWithoutPrimiseAll")
-/*
 
 
 
