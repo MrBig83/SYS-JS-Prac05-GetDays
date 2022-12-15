@@ -40,5 +40,5 @@ const getDataPromiseAll = async (prevYears) => {
     console.timeEnd("promiseAll");
 };
 
-//getDataRegularCall(30); //ca 2,6sek
-getDataPromiseAll(30); //ca 1,0sek
+getDataRegularCall(30); //ca 2,6sek
+//getDataPromiseAll(30); //ca 1,0sek
